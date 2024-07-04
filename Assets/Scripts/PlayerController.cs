@@ -14,21 +14,21 @@ public class PlayerController : MonoBehaviour
 
     // Ladder Movement //
     public float climbSpeed;
-    public Collider2D platformCollision;
+    private BoxCollider2D boxCollider2D;
 
     private Vector2 lastDir = Vector2.zero;
     private bool isLadder = false;
     private bool isClimbing = false;
-    
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
     {
-        if(isLadder && inputDir.y != 0)
+        if(isLadder && inputDir.y != 0 && !isClimbing)
         {
             isClimbing = true;
         }
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = 0f;
             rb.velocity = new Vector2(rb.velocity.x, inputDir.y * moveSpeed);
         }
-        else 
+        else if (!isClimbing) 
         {
             rb.gravityScale = 1f;
         }
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
             {
                 isClimbing = false;
                 inputDir = lastDir;
-            }        
+            }     
         }
     }
 }
