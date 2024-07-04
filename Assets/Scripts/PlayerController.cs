@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Vector2 inputDir = Vector2.zero;
     Vector2 velocitySmoothing = Vector2.zero;
+    
 
     // Ladder Movement //
     public float climbSpeed;
@@ -20,10 +21,18 @@ public class PlayerController : MonoBehaviour
     private bool isLadder = false;
     private bool isClimbing = false;
 
+    // Animation
+    SpriteRenderer spriteRenderer;
+    private Animator animator;
+    int velocityHash; // This is the Animator's Velocity parameter.
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        velocityHash = Animator.StringToHash("Velocity");
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -32,6 +41,8 @@ public class PlayerController : MonoBehaviour
         {
             isClimbing = true;
         }
+
+        animator.SetFloat(velocityHash, Mathf.Abs(inputDir.x));
     }
     void FixedUpdate()
     {
@@ -54,6 +65,15 @@ public class PlayerController : MonoBehaviour
         lastDir = inputDir; // Saves the direction the player was last moving in.
         rb.velocity = Vector2.zero;
         inputDir = dir; // Saves the desired direction.
+
+        if(inputDir.x > 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else if(inputDir.x < 0)
+        {
+            spriteRenderer.flipX = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
