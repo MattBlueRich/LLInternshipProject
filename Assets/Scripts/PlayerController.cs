@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         velocityHash = Animator.StringToHash("Velocity");
         animator = transform.GetChild(0).GetComponent<Animator>();
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
         if(isLadder && inputDir.y != 0 && !isClimbing)
         {
             isClimbing = true;
+            animator.SetBool("isClimbing", true);
         }
 
         animator.SetFloat(velocityHash, Mathf.Abs(inputDir.x));
@@ -94,6 +96,7 @@ public class PlayerController : MonoBehaviour
             {
                 isClimbing = false;
                 inputDir = lastDir;
+                animator.SetBool("isClimbing", false);
             }     
         }
     }
