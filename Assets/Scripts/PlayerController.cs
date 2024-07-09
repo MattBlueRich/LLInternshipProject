@@ -100,4 +100,13 @@ public class PlayerController : MonoBehaviour
             }     
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Walls"))
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+            inputDir = new Vector2(-inputDir.x, inputDir.y);
+        }
+    }
 }
