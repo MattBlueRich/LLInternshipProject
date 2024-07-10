@@ -1,3 +1,4 @@
+using Lean.Touch;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,16 @@ public class GhostHealth : MonoBehaviour
     public float damageTakenFactor;
     private bool isDead = false;
 
+    CircleCollider2D circleCollider;
+    private GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
+        circleCollider = GetComponent<CircleCollider2D>();
+        circleCollider.enabled = false;
         currentHealth = maxHealth;
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     public void OnDeath()
@@ -36,6 +43,20 @@ public class GhostHealth : MonoBehaviour
         {
             currentHealth = 0;
             OnDeath();
+        }
+    }
+
+
+    private void Update()
+    {
+        // This only allows the player to attack the ghost enemy when in range.
+        if(Vector2.Distance(this.transform.position, player.transform.position) < 10f && !circleCollider.enabled)
+        {
+            circleCollider.enabled = true;
+        }
+        else if (Vector2.Distance(this.transform.position, player.transform.position) > 10f && circleCollider.enabled)
+        {
+            circleCollider.enabled = false;
         }
     }
 }
