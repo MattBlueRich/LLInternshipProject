@@ -10,12 +10,9 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     Rigidbody2D rb;
     Vector2 inputDir = Vector2.zero;
-    Vector2 velocitySmoothing = Vector2.zero;
     
-
     // Ladder Movement //
     public float climbSpeed;
-    private BoxCollider2D boxCollider2D;
 
     private Vector2 lastDir = Vector2.zero;
     private bool isLadder = false;
@@ -29,7 +26,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
 
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         velocityHash = Animator.StringToHash("Velocity");
@@ -42,6 +38,8 @@ public class PlayerController : MonoBehaviour
         {
             isClimbing = true;
             animator.SetBool("isClimbing", true);
+            Debug.Log("Start Climbing!");    
+            rb.isKinematic = true;
         }
 
         animator.SetFloat(velocityHash, Mathf.Abs(inputDir.x));
@@ -54,7 +52,7 @@ public class PlayerController : MonoBehaviour
         if (isClimbing)
         {
             rb.gravityScale = 0f;
-            rb.velocity = new Vector2(rb.velocity.x, inputDir.y * moveSpeed);
+            rb.velocity = new Vector2(rb.velocity.x, inputDir.y * climbSpeed);
         }
         else if (!isClimbing) 
         {
@@ -97,6 +95,8 @@ public class PlayerController : MonoBehaviour
                 isClimbing = false;
                 inputDir = lastDir;
                 animator.SetBool("isClimbing", false);
+                Debug.Log("Stop Climbing!");
+                rb.isKinematic = false;
             }     
         }
     }
