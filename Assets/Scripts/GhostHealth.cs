@@ -12,6 +12,9 @@ public class GhostHealth : MonoBehaviour
     [Header("Shield")]
     public float damageTakenFactor;
     private bool isDead = false;
+    [Header("Drop Loot")]
+    public GameObject itemDrop;
+    SpriteRenderer spriteRenderer;
 
     CircleCollider2D circleCollider;
     private GameObject player;
@@ -23,6 +26,7 @@ public class GhostHealth : MonoBehaviour
         circleCollider.enabled = false;
         currentHealth = maxHealth;
         player = GameObject.FindGameObjectWithTag("Player");
+        spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     public void OnDeath()
@@ -30,7 +34,15 @@ public class GhostHealth : MonoBehaviour
         if (!isDead)
         {
             isDead = true;
-            Destroy(gameObject);
+            itemDrop.transform.position = this.transform.position;
+            itemDrop.GetComponent<Rigidbody2D>().gravityScale = 1f;
+
+            Vector2 dir = (player.transform.position - transform.position).normalized;
+
+            itemDrop.GetComponent<Rigidbody2D>().AddForce(dir * 3f, ForceMode2D.Impulse);
+
+            spriteRenderer.gameObject.SetActive(false);
+            Destroy(this.gameObject, 1f);
         }
     }
     public void DecreaseHealth()
