@@ -22,6 +22,7 @@ public class GhostHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        itemDrop.SetActive(false);
         circleCollider = GetComponent<CircleCollider2D>();
         circleCollider.enabled = false;
         currentHealth = maxHealth;
@@ -34,15 +35,14 @@ public class GhostHealth : MonoBehaviour
         if (!isDead)
         {
             isDead = true;
-            itemDrop.transform.position = this.transform.position;
-            itemDrop.GetComponent<Rigidbody2D>().gravityScale = 1f;
+            itemDrop.SetActive(true);
 
             Vector2 dir = (player.transform.position - transform.position).normalized;
 
             itemDrop.GetComponent<Rigidbody2D>().AddForce(dir * 3f, ForceMode2D.Impulse);
 
             spriteRenderer.gameObject.SetActive(false);
-            Destroy(this.gameObject, 1f);
+            Destroy(this.gameObject, 5f);
         }
     }
     public void DecreaseHealth()

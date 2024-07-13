@@ -16,11 +16,15 @@ public class ItemDrop : MonoBehaviour
     public int scoreValue;
     public Sprite[] itemSprites; 
     private SpriteRenderer spriteRenderer;
+    private Object particleRef;
+    private GameObject colliders;
 
     // The Start() function handles the random drop selection.
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        particleRef = Resources.Load("PickupParticle");
+        colliders = transform.GetChild(0).gameObject;
 
         int randomNo = Random.Range(0, 20); // Pick a random value.
 
@@ -83,6 +87,16 @@ public class ItemDrop : MonoBehaviour
 
     private void DestroyAnimation()
     {
+        // Disables Pick-Up.
+        colliders.SetActive(false);
+        spriteRenderer.enabled = false;
+
+        // Particle Animation.
+        GameObject particleEffect = (GameObject)Instantiate(particleRef);
+        particleEffect.transform.position = transform.position;
+        Destroy(particleEffect, 1f);
+
+        // Destroys Pick-Up.
         Destroy(this.gameObject);
     }
 }
