@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip rollSFX;
+    public AudioClip ladderStepSFX;
     private AudioSource audioSource;
 
     void Start()
@@ -48,6 +50,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isClimbing", true);
             Debug.Log("Start Climbing!");    
             rb.isKinematic = true;
+            InvokeRepeating("PlayLadderSFX", 0f, 0.3f);
         }
 
         animator.SetFloat(velocityHash, Mathf.Abs(inputDir.x)); // This switches from idle to moving animations, depending on inputDir.x.
@@ -93,6 +96,8 @@ public class PlayerController : MonoBehaviour
         moveSpeed = 12f;
         boost = true;
 
+        audioSource.volume = 0.5f;
+        audioSource.pitch = UnityEngine.Random.Range(0.7f, 1f);
         audioSource.clip = rollSFX;
         audioSource.Play();
 
@@ -130,6 +135,8 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isClimbing", false);
                 Debug.Log("Stop Climbing!");
                 rb.isKinematic = false;
+                CancelInvoke();
+                audioSource.Stop();
             }     
         }
     }
@@ -142,5 +149,13 @@ public class PlayerController : MonoBehaviour
             spriteRenderer.flipX = !spriteRenderer.flipX;
             inputDir = new Vector2(-inputDir.x, inputDir.y);
         }
+    }
+
+    public void PlayLadderSFX()
+    {
+        audioSource.volume = 0.3f;
+        audioSource.pitch = UnityEngine.Random.Range(0.7f, 1f);
+        audioSource.clip = ladderStepSFX;
+        audioSource.Play();
     }
 }

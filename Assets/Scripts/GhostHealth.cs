@@ -83,7 +83,7 @@ public class GhostHealth : MonoBehaviour
 
     public void PlayAttackSound()
     {
-        audioSource.volume = 0.25f;
+        audioSource.volume = 0.15f;
         audioSource.clip = holdAttackSFX;
         audioSource.loop = true;
         audioSource.Play();
