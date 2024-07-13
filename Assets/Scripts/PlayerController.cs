@@ -25,6 +25,10 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     int velocityHash; // This is the Animator's Velocity parameter.
 
+    [Header("Audio")]
+    public AudioClip rollSFX;
+    private AudioSource audioSource;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -32,6 +36,7 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         velocityHash = Animator.StringToHash("Velocity");
         animator = transform.GetChild(0).GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -87,7 +92,10 @@ public class PlayerController : MonoBehaviour
         // These variables enable a short boost of speed when swiping in a direction.
         moveSpeed = 12f;
         boost = true;
-        
+
+        audioSource.clip = rollSFX;
+        audioSource.Play();
+
         // This if-statement flips the sprite according to the desired swipe direction.
         if(inputDir.x > 0)
         {
@@ -100,8 +108,6 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("RollLeft");
         }   
     }
-
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // This if-statement checks when the player character is by a ladder.
@@ -110,7 +116,6 @@ public class PlayerController : MonoBehaviour
             isLadder = true;
         }
     }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         // This if-statement checks when the player character has exited the ladder.

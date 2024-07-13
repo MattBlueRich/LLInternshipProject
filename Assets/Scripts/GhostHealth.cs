@@ -71,11 +71,11 @@ public class GhostHealth : MonoBehaviour
     private void Update()
     {
         // This only allows the player to attack the ghost enemy when in range.
-        if(Vector2.Distance(this.transform.position, player.transform.position) < 10f && !circleCollider.enabled)
+        if(Vector2.Distance(this.transform.position, player.transform.position) < 10f && !circleCollider.enabled && !isDead)
         {
             circleCollider.enabled = true;
         }
-        else if (Vector2.Distance(this.transform.position, player.transform.position) > 10f && circleCollider.enabled)
+        else if (Vector2.Distance(this.transform.position, player.transform.position) > 10f && circleCollider.enabled && !isDead)
         {
             circleCollider.enabled = false;
         }
