@@ -19,12 +19,17 @@ public class ItemDrop : MonoBehaviour
     private Object particleRef;
     private GameObject colliders;
 
+    public AudioClip fruitSFX;
+    public AudioClip extraLifeSFX;
+    private AudioSource audioSource;
+
     // The Start() function handles the random drop selection.
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         particleRef = Resources.Load("PickupParticle");
         colliders = transform.GetChild(0).gameObject;
+        audioSource = GetComponent<AudioSource>();
 
         int randomNo = Random.Range(0, 20); // Pick a random value.
 
@@ -34,14 +39,16 @@ public class ItemDrop : MonoBehaviour
         {
             itemDrop = dropType.extraLife;
             spriteRenderer.sprite = itemSprites[0];
-
+            audioSource.clip = extraLifeSFX;
         }
         // [ Fruit Random Drop ]
         // 61%
         else
-        { 
+        {
+            audioSource.clip = fruitSFX;
+
             // 33% - 100
-            if(randomNo < 15)
+            if (randomNo < 15)
             {
                 itemDrop = dropType.cherry100;
                 scoreValue = 100;
@@ -96,7 +103,10 @@ public class ItemDrop : MonoBehaviour
         particleEffect.transform.position = transform.position;
         Destroy(particleEffect, 1f);
 
+        // Play Sound Effect.
+        audioSource.Play();
+
         // Destroys Pick-Up.
-        Destroy(this.gameObject);
+        Destroy(this.gameObject, 2f);
     }
 }

@@ -11,12 +11,17 @@ public class GhostHealth : MonoBehaviour
     public float currentHealth;
     [Header("Shield")]
     public float damageTakenFactor;
-    private bool isDead = false;
     [Header("Drop Loot")]
-    public GameObject itemDrop;
-    SpriteRenderer spriteRenderer;
+    public GameObject itemDrop;  
+    [Header("Audio")]
+    public AudioClip holdAttackSFX;
+    public AudioClip deathSFX;
 
-    CircleCollider2D circleCollider;
+    private bool isDead = false;
+
+    private AudioSource audioSource;
+    private SpriteRenderer spriteRenderer;
+    private CircleCollider2D circleCollider;
     private GameObject player;
 
     // Start is called before the first frame update
@@ -28,6 +33,7 @@ public class GhostHealth : MonoBehaviour
         currentHealth = maxHealth;
         player = GameObject.FindGameObjectWithTag("Player");
         spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void OnDeath()
@@ -37,16 +43,21 @@ public class GhostHealth : MonoBehaviour
             isDead = true;
             itemDrop.SetActive(true);
 
-            Vector2 dir = (player.transform.position - transform.position).normalized;
+            audioSource.volume = 0.5f;
+            audioSource.clip = deathSFX;
+            audioSource.loop = false;
+            audioSource.Play();
 
+            Vector2 dir = (player.transform.position - transform.position).normalized;
             itemDrop.GetComponent<Rigidbody2D>().AddForce(dir * 3f, ForceMode2D.Impulse);
 
             spriteRenderer.gameObject.SetActive(false);
+            circleCollider.enabled = false;
             Destroy(this.gameObject, 5f);
         }
     }
     public void DecreaseHealth()
-    {
+    {       
         if (currentHealth > 0)
         {
             currentHealth -= Time.deltaTime * damageTakenFactor;
@@ -57,8 +68,6 @@ public class GhostHealth : MonoBehaviour
             OnDeath();
         }
     }
-
-
     private void Update()
     {
         // This only allows the player to attack the ghost enemy when in range.
@@ -71,4 +80,18 @@ public class GhostHealth : MonoBehaviour
             circleCollider.enabled = false;
         }
     }
+
+    public void PlayAttackSound()
+    {
+        audioSource.volume = 0.25f;
+        audioSource.clip = holdAttackSFX;
+        audioSource.loop = true;
+        audioSource.Play();
+    }
+
+    public void StopAttackSound()
+    {
+        audioSource.Stop();
+    }
+
 }
