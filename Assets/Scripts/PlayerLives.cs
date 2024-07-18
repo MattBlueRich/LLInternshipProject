@@ -46,6 +46,21 @@ public class PlayerLives : MonoBehaviour
             animator.SetFloat(velocityHash, 0);
             StartCoroutine(ReloadScene());
         }
+        else if(collision.gameObject.CompareTag("Ghost") && playerController.canDodge)
+        {
+            StartCoroutine(SlowMo());
+        }
+    }
+
+    IEnumerator SlowMo()
+    {
+        Time.timeScale = 0.4f;
+        float lastPitch = GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().pitch;
+        GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().pitch = 0.6f;
+        yield return new WaitForSeconds(.5f);
+        Time.timeScale = 1.0f;
+        GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().pitch = lastPitch;
+
     }
 
     IEnumerator ReloadScene()
