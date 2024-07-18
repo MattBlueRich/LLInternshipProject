@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Vector2 inputDir = Vector2.zero;
     private bool boost = false;
-    [HideInInspector] public bool canMove = false; 
+    [HideInInspector] public bool canMove = false;
+    [HideInInspector] public bool canDodge = true;
 
     // Ladder Movement //
     public float climbSpeed;
@@ -26,6 +27,8 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     private Animator animator;
     int velocityHash; // This is the Animator's Velocity parameter.
+    private Material matWhite;
+    private Material matDefault;
 
     // Audio //
     [Header("Audio")]
@@ -46,6 +49,9 @@ public class PlayerController : MonoBehaviour
         velocityHash = Animator.StringToHash("Velocity"); // References the animator's idle - moving blend tree value.
 
         minMoveSpeed = moveSpeed; // Set default move speed value.
+
+        matWhite = Resources.Load("WhiteFlash", typeof(Material)) as Material; // Loads a white flash sprite for invincibility animation.
+        matDefault = spriteRenderer.material;
     }
 
     private void Update()
@@ -59,7 +65,10 @@ public class PlayerController : MonoBehaviour
             InvokeRepeating("PlayLadderSFX", 0f, 0.3f); // Play a looping ladder step sound effect.
         }
 
-        animator.SetFloat(velocityHash, Mathf.Abs(inputDir.x)); // This switches from idle to moving animations, depending on inputDir.x.
+        if (canMove)
+        {
+            animator.SetFloat(velocityHash, Mathf.Abs(inputDir.x)); // This switches from idle to moving animations, depending on inputDir.x.
+        }       
 
         // Enabled in SetDirection(), this if-statement applies a small speed boost when swiping in a direction.
         if (boost)
@@ -73,13 +82,19 @@ public class PlayerController : MonoBehaviour
             {
                 moveSpeed = minMoveSpeed; // Set moveSpeed to default.
                 boost = false; // End this if-statement.
+                canDodge = false; // Disables invincibility.
+                CancelInvoke(); // Stops invincibility animation.
+                spriteRenderer.material = matDefault; // Reset material.
             }
         }
     }
     void FixedUpdate()
     {
-        // Moves the player horizontally in inputDir (swipe direction), by a movement speed.
-        rb.velocity = new Vector2(inputDir.x * moveSpeed, rb.velocity.y);
+        if (canMove)
+        {
+            // Moves the player horizontally in inputDir (swipe direction), by a movement speed.
+            rb.velocity = new Vector2(inputDir.x * moveSpeed, rb.velocity.y);
+        }
 
         // This if-statement moves the player's y-velocity while climbing.
         if (isClimbing)
@@ -102,6 +117,9 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+
+        canDodge = true; // Grants invincibility while dodging.
+        InvokeRepeating("DodgeFlickerAnimation", 0f, 0.15f); // Play invicibility animation.
 
         lastDir = inputDir; // Saves the direction the player was last moving in.
         rb.velocity = Vector2.zero;
@@ -152,7 +170,6 @@ public class PlayerController : MonoBehaviour
                 // Start moving the player character in the last direction they were moving, before entering the ladder.
                 inputDir = lastDir; 
 
-
                 animator.SetBool("isClimbing", false); // Stop the climbing animation.
                 rb.isKinematic = false; // Re-enable collisions with RigidBody2D.
 
@@ -187,5 +204,18 @@ public class PlayerController : MonoBehaviour
         audioSource.pitch = UnityEngine.Random.Range(0.7f, 1f);
         audioSource.clip = ladderStepSFX;
         audioSource.Play();
+    }
+
+    // This function is repeated every fixed interval by InvokeRepeating(), to create a flickering sprite effect.
+    public void DodgeFlickerAnimation()
+    { 
+        if(spriteRenderer.material == matDefault)
+        {
+            spriteRenderer.material = matWhite;
+        }
+        else
+        {
+            spriteRenderer.material = matDefault;
+        }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerStart : MonoBehaviour
 {
     public PlayerController playerController;
+    public GameObject selectSystem;
     public float fallSpeed;
     private GameObject playerSprite;
     Rigidbody2D rb;
@@ -16,8 +17,8 @@ public class PlayerStart : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerSprite = transform.GetChild(0).gameObject;
-
         transform.position = new Vector2(Random.Range(-25, 25), 20); // Pick a random spawn location.
+        selectSystem.SetActive(false); // Disables attacking on start.
 
         // If the player character is on the right side of the screen...
         if (transform.position.x > 0)
@@ -53,7 +54,9 @@ public class PlayerStart : MonoBehaviour
             rb.gravityScale = 1.0f; // Enable gravity.
             playerController.SetDirection(Vector2.right * startDir); // Start moving player character in starDir's direction.
             GameObject.FindGameObjectWithTag("Music Manager").GetComponent<MusicManager>().startMusic = true; // Start BGM Music.
-            startGame = true; // Stops constant y-velocity movement in FixedUpdate().        
+            selectSystem.SetActive(true); // Allows attacking.
+            startGame = true; // Stops constant y-velocity movement in FixedUpdate().
+            
         }
     }
 }
