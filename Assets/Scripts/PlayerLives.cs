@@ -54,13 +54,28 @@ public class PlayerLives : MonoBehaviour
 
     IEnumerator SlowMo()
     {
-        Time.timeScale = 0.4f;
+        // Slow down time.
+        Time.timeScale = 0.5f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+
+        // Slow down the BGM.
         float lastPitch = GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().pitch;
         GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().pitch = 0.6f;
+
+        // Zoom the camera in.
+        Camera.main.GetComponent<CamZoom>().zoomIn = true;
+
         yield return new WaitForSeconds(.5f);
+
+        // Resume time.
         Time.timeScale = 1.0f;
+        Time.fixedDeltaTime = 0.02f;
+
+        // Return BGM to normal speed.
         GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().pitch = lastPitch;
 
+        // Zoom camera back out.
+        Camera.main.GetComponent<CamZoom>().zoomIn = false;
     }
 
     IEnumerator ReloadScene()
