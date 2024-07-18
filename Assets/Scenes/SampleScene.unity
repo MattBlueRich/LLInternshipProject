@@ -1424,6 +1424,7 @@ MonoBehaviour:
   maxLives: 0
   currentLives: 0
   selectSystem: {fileID: 50099642}
+  deathSFX: {fileID: 8300000, guid: 4f8ef2ca5f5fdf94c84b723cce28d7d6, type: 3}
 --- !u!1 &497619939
 GameObject:
   m_ObjectHideFlags: 0
