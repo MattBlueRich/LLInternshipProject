@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
                 moveSpeed = minMoveSpeed; // Set moveSpeed to default.
                 boost = false; // End this if-statement.
                 canDodge = false; // Disables invincibility.
-                CancelInvoke(); // Stops invincibility animation.
+                CancelInvoke("DodgeFlickerAnimation"); // Stops invincibility animation.
                 spriteRenderer.material = matDefault; // Reset material.
             }
         }
@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour
                 rb.isKinematic = false; // Re-enable collisions with RigidBody2D.
 
                 // This stops all the ladder climbing sound effects. 
-                CancelInvoke(); 
+                CancelInvoke("PlayLadderSFX"); 
                 audioSource.Stop();
             }     
         }

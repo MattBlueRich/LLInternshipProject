@@ -106,6 +106,6 @@ public class ItemDrop : MonoBehaviour
         audioSource.Play();
 
         // Destroys Pick-Up.
-        Destroy(this.gameObject, 2f);
+        Destroy(this.gameObject.transform.parent.gameObject, 0.5f);
     }
 }
