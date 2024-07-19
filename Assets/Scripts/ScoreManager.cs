@@ -7,6 +7,7 @@ public class ScoreManager : MonoBehaviour
 {
     public int currentScore;
     public static ScoreManager instance; // This allows the script to be accessed from outside scripts.
+    public static int savedScore = 0;
 
     public TextMeshProUGUI scoreText;
 
@@ -16,6 +17,9 @@ public class ScoreManager : MonoBehaviour
     }
     private void Start()
     {
+        // Carries on the score from the previous level.
+        currentScore = savedScore;
+
         // Set the score text's default value.
         scoreText.text = currentScore.ToString("0000000000");
     }
@@ -27,5 +31,10 @@ public class ScoreManager : MonoBehaviour
         currentScore += scoreValue;
         // Update the score text.
         scoreText.text = currentScore.ToString("0000000000");
+    }
+
+    public void SaveScore()
+    {
+        savedScore = currentScore;
     }
 }

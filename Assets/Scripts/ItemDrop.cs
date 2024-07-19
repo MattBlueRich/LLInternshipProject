@@ -33,34 +33,34 @@ public class ItemDrop : MonoBehaviour
         int randomNo = Random.Range(0, 20); // Pick a random value.
 
         // [ Extra Life Drop ]
-        // 38%
-        if (randomNo < 8 && PlayerLives.maxLives < 3)
+        // 19%
+        if (randomNo < 4 && PlayerLives.maxLives < 3)
         {
             itemDrop = dropType.extraLife;
             spriteRenderer.sprite = itemSprites[0];
             audioSource.clip = extraLifeSFX;
         }
         // [ Fruit Random Drop ]
-        // 61%
+        // 81%
         else
         {
             audioSource.clip = fruitSFX;
 
-            // 33% - 100
+            // 52% 
             if (randomNo < 15)
             {
                 itemDrop = dropType.cherry100;
                 scoreValue = 100;
                 spriteRenderer.sprite = itemSprites[1];
             }
-            // 19% - 300
+            // 19%  
             else if(randomNo >= 15 && randomNo < 19) 
             {
                 itemDrop = dropType.strawberry300;
                 scoreValue = 300;
                 spriteRenderer.sprite = itemSprites[2];
             }
-            // 9% - 500
+            // 9%  
             else if(randomNo >= 19)
             {
                 itemDrop = dropType.orange500;
