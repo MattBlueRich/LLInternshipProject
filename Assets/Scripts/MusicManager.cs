@@ -18,9 +18,14 @@ public class MusicManager : MonoBehaviour
     {
         // This if-statement alters the pitch of the song ever so slightly, per loop.
         // startMusic is set to true, by PlayerStart.cs. 
-        if (!audioSource.isPlaying && startMusic)
+        if (!audioSource.isPlaying && startMusic && PlayerLives.maxLives >= 2)
         {
             audioSource.pitch = Random.Range(0.9f, 1.0f);
+            audioSource.Play();
+        }
+        else if(!audioSource.isPlaying && startMusic && PlayerLives.maxLives < 2)
+        {
+            audioSource.pitch = Random.Range(1.2f, 1.3f);
             audioSource.Play();
         }
     }

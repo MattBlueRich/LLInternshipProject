@@ -9,7 +9,6 @@ public enum dropType
     strawberry300,
     orange500
 }
-
 public class ItemDrop : MonoBehaviour
 {
     public dropType itemDrop;
@@ -35,7 +34,7 @@ public class ItemDrop : MonoBehaviour
 
         // [ Extra Life Drop ]
         // 38%
-        if (randomNo < 8 /* && Player has less than maxLives */)
+        if (randomNo < 8 && PlayerLives.maxLives < 3)
         {
             itemDrop = dropType.extraLife;
             spriteRenderer.sprite = itemSprites[0];
@@ -79,7 +78,7 @@ public class ItemDrop : MonoBehaviour
             if(itemDrop == dropType.extraLife)
             {
                 // Update the player's current lives, if dropType.extraLife is selected.
-                // LivesManager.instance.UpdateLives(1);
+                PlayerLives.maxLives++;
             }
             else
             {

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerLives : MonoBehaviour
 {
-    public int maxLives;
+    public static int maxLives = 3;
     public int currentLives;
     public GameObject selectSystem;
     public AudioClip deathSFX;
@@ -24,14 +24,14 @@ public class PlayerLives : MonoBehaviour
         animator = transform.GetChild(0).GetComponent<Animator>();
         velocityHash = Animator.StringToHash("Velocity"); // References the animator's idle - moving blend tree value.
         playerController.canDodge = true;
+        
+        currentLives = maxLives;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Ghost") && !playerController.canDodge)
         {
-            Debug.Log("Hit! - 1 Life");
-
             audioSource.clip = deathSFX;
             audioSource.Play();
 
@@ -43,8 +43,11 @@ public class PlayerLives : MonoBehaviour
             Vector2 force = dif * 10f;
             rb.AddForce(force, ForceMode2D.Impulse);
 
+            // Zoom the camera in.
+            Camera.main.GetComponent<CamZoom>().zoomIn = true;
+
             animator.SetFloat(velocityHash, 0);
-            StartCoroutine(ReloadScene());
+            StartCoroutine(GameOver());
         }
         else if(collision.gameObject.CompareTag("Ghost") && playerController.canDodge)
         {
@@ -78,9 +81,19 @@ public class PlayerLives : MonoBehaviour
         Camera.main.GetComponent<CamZoom>().zoomIn = false;
     }
 
-    IEnumerator ReloadScene()
+    IEnumerator GameOver()
     {
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if(currentLives-1 < 0)
+        {
+            Debug.Log("Game Over!");
+            GameObject.FindGameObjectWithTag("Music Manager").GetComponent<MusicManager>().startMusic = false;
+            GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().Stop();
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+            maxLives--;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
