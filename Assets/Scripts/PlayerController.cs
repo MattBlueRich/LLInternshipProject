@@ -90,21 +90,24 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (canMove)
+        if (!PauseMenu.isPaused)
         {
-            // Moves the player horizontally in inputDir (swipe direction), by a movement speed.
-            rb.velocity = new Vector2(inputDir.x * moveSpeed, rb.velocity.y);
-        }
+            if (canMove)
+            {
+                // Moves the player horizontally in inputDir (swipe direction), by a movement speed.
+                rb.velocity = new Vector2(inputDir.x * moveSpeed, rb.velocity.y);
+            }
 
-        // This if-statement moves the player's y-velocity while climbing.
-        if (isClimbing)
-        {
-            rb.gravityScale = 0f; // Disable gravity.
-            rb.velocity = new Vector2(rb.velocity.x, inputDir.y * climbSpeed); // Apply y-velocity.
-        }
-        else if (!isClimbing) 
-        {
-            rb.gravityScale = 1f; // Enable gravity.
+            // This if-statement moves the player's y-velocity while climbing.
+            if (isClimbing)
+            {
+                rb.gravityScale = 0f; // Disable gravity.
+                rb.velocity = new Vector2(rb.velocity.x, inputDir.y * climbSpeed); // Apply y-velocity.
+            }
+            else if (!isClimbing)
+            {
+                rb.gravityScale = 1f; // Enable gravity.
+            }
         }
     }
 

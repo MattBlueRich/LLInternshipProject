@@ -40,7 +40,7 @@ public class PlayerStart : MonoBehaviour
     private void FixedUpdate()
     {
         // This if-statement moves the player downwards, from the top of the screen, at the start of the game.
-        if (!startGame)
+        if (!startGame && !PauseMenu.isPaused)
         {
             rb.velocity = new Vector2(rb.velocity.x, -1 * fallSpeed);
         }

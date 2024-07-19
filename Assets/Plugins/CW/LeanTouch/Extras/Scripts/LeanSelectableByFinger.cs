@@ -236,7 +236,7 @@ namespace Lean.Touch
 		}
 
 		private void HandleFingerUp(LeanFinger finger)
-		{
+		{			
 			for (var i = 0; i < selectingPairs.Count; i++)
 			{
 				var pair = selectingPairs[i];
