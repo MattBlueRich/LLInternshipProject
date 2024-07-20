@@ -88,6 +88,14 @@ public class PlayerLives : MonoBehaviour
             Debug.Log("Game Over!");
             GameObject.FindGameObjectWithTag("Music Manager").GetComponent<MusicManager>().startMusic = false;
             GameObject.FindGameObjectWithTag("Music Manager").GetComponent<AudioSource>().Stop();
+
+            yield return new WaitForSeconds(1f);
+            
+            maxLives = 3; // Reset lives.
+            ScoreManager.instance.ResetScore(); // Reset score.
+            ObjectiveManager.currentLevel = 0; // Reset current level.
+            PauseMenu.autoPause = true; // Restart paused.
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
         {
